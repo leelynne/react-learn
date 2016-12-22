@@ -22,12 +22,6 @@ const list = [
 ];
 
 const isSearched = (query) => (item) => !query || item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1;
-/*
- function isSearched(query) {
- return function(item) {
- return !query || item.title.toLowerCase().indexOf(query.toLowerCase()) !== -1;
- };
- }*/
 
 class App extends Component {
   constructor(props) {
@@ -48,8 +42,12 @@ class App extends Component {
     const {query, list} = this.state;
 
     return (
-      <div className="App">
-        <Search value={query} onChange={this.onSearchChange}/>
+      <div className="page">
+        <div className="interactions">
+          <Search value={query} onChange={this.onSearchChange}>
+            Search
+          </Search>
+        </div>
         <Table list={list} pattern={query}/>
       </div>
     );
@@ -59,28 +57,34 @@ class App extends Component {
 const Search = ({ value, onChange, children}) => {
   return (
     <form>
-      <input type="text" value={value} onChange={onChange}/>
+      {children} <input type="text" value={value} onChange={onChange}/>
     </form>
   );
 };
 
-class Table extends Component {
-  render() {
-    const {list, pattern } = this.props;
-    return (
-      <div>
-        { list.filter(isSearched(pattern)).map((item) => {
-          return (
-            <div key={item.objectID}>
-              <span><a href={item.url}>{item.title}</a></span>
-              <span>{item.author}</span>
-              <span>{item.num_comments}</span>
-              <span>{item.points}</span>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-}
+const Table = ({list, pattern}) => {
+  return (
+    <div className="table">
+      { list.filter(isSearched(pattern)).map((item) => {
+        return (
+          <div key={item.objectID} className="table-row">
+            <span style={{ width: '40%' }}>
+              <a href={item.url}>{item.title}</a>
+            </span>
+            <span style={{ width: '30%' }}>
+              {item.author}
+            </span>
+            <span style={{ width: '15%' }}>
+              {item.num_comments}
+            </span>
+            <span style={{ width: '15%' }}>
+              {item.points}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 export default App;
